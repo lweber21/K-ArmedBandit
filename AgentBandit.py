@@ -7,8 +7,10 @@ import random
 
 class AgentBandit:
 
-    def __init__(self, k=4):
+    def __init__(self, k=4, eps=0, trial=1000):
         self.k = k
+        self.eps = eps
+        self.trial = trial
         self.Qval = {}
         self.N = {}
         self.reset()
@@ -24,12 +26,12 @@ class AgentBandit:
             self.Qval[i] = 0
             self.N[i] = 0
 
-    def train(self, eps, trial):
+    def train(self):
         self.reset()
 
-        for i in range(trial):
+        for i in range(self.trial):
             self.x.append(i)
-            if np.random.uniform() < eps:
+            if np.random.uniform() < self.eps:
                 action = random.randint(1, self.k)
             else:
                 action = max(self.Qval.keys(), key=(lambda j: self.Qval[j]))
@@ -43,10 +45,13 @@ class AgentBandit:
 
             self.Qval[action] = self.Qval[action] + (1.0 / self.N[action]) * (reward - self.Qval[action])
 
-        return self.rewardTally
+        return self.rewardTally, self.optimalChoice
 
     def get_rewards(self):
         return self.rewardTally
+
+    def get_optimal(self):
+        return self.optimalChoice
 
     def plot_results(self):
 
@@ -54,14 +59,23 @@ class AgentBandit:
         plt.show()
 
 
-agent = AgentBandit()
-#display trained values
-print(agent.bd)
-agent.train(0.1, 10000)
-print(agent.Qval)
-#print(agent.optimalChoice)
-#agent.plot_results()
+#Run Simulation on 2000 DIFFERENT bandits
+nBandits = 2000
+episodes = 1000
+arms = 10
+results = np.zeros((nBandits, episodes))
+optimalVal = np.zeros((nBandits, episodes))
+for i in range(nBandits):
+
+    agent = AgentBandit(arms, 0.1, episodes)
+    results[i, :], optimalVal[i, :] = agent.train()
+
+
+print(results)
 
 
 
-#
+
+
+
+
