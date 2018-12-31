@@ -59,7 +59,8 @@ class AgentBandit:
         plt.show()
 
 
-#Run Simulation on 2000 DIFFERENT bandits
+#Run Simulation on 2000 different bandits
+
 nBandits = 2000
 episodes = 1000
 arms = 10
@@ -71,8 +72,20 @@ for i in range(nBandits):
     results[i, :], optimalVal[i, :] = agent.train()
 
 
-print(results)
+avg_reward = np.mean(results, axis=0)
+x_axis = np.arange(1, episodes + 1)
+opt = 100*np.sum(optimalVal, axis=0)/nBandits
+print(opt)
 
+plt.plot(x_axis, avg_reward)
+plt.xlabel("Episode")
+plt.ylabel("Average Reward")
+plt.show()
+
+plt.plot(x_axis, opt)
+plt.xlabel("Episode")
+plt.ylabel("% Optimal Choice")
+plt.show()
 
 
 
