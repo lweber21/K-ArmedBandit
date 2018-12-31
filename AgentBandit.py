@@ -75,7 +75,7 @@ for i in range(nBandits):
 avg_reward = np.mean(results, axis=0)
 x_axis = np.arange(1, episodes + 1)
 opt = 100*np.sum(optimalVal, axis=0)/nBandits
-print(opt)
+
 
 plt.plot(x_axis, avg_reward)
 plt.xlabel("Episode")
